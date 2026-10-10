@@ -4,3 +4,4 @@ node_modules/
 *.pdf.tmp
 .claude/
 excel-to-excel.pdf
+.playwright-mcp/

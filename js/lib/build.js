@@ -22,7 +22,11 @@
     if (t.keys && t.keys.length) how += '<div class="how-keys">' + keycapsHTML(t.keys) + '</div>';
     if (t.formula) how += '<div class="how-formula"><code>' + esc(t.formula) + '</code></div>';
     if (t.ribbon) how += '<div class="how-ribbon">' + esc(t.ribbon) + '</div>';
-    const alt = t.alt ? '<div class="rail-alt"><b>Older Excel:</b> ' + esc(t.alt) + '</div>' : '';
+    let alt = '';
+    if (t.alt) {
+      const m = /^([^:]{3,30}):\s+(.*)$/.exec(t.alt);
+      alt = '<div class="rail-alt"><b>' + esc(m ? m[1] : 'Older Excel') + '</b>' + esc(m ? m[2] : t.alt) + '</div>';
+    }
     const frags = steps.map((_, k) => '<span class="fragment step" data-fragment-index="' + k + '"></span>').join('');
     const badge = t.tryit ? '<div class="try-badge">↓ Try it yourself</div>' : '';
     return '<section class="t-slide act' + t.act + '" id="' + slideId(t) + '" data-trick="' + esc(t.id) + '">' +

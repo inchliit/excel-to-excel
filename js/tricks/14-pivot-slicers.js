@@ -3,7 +3,7 @@ registerTrick({
   title: 'Pivot Table + Slicers',
   tagline: 'Downtime by cause, one click per line',
   version: 'All',
-  keys: ['Alt', 'F5'],
+  keys: null,
   formula: null,
   ribbon: 'Insert › PivotTable',
   why: 'See which causes eat the most downtime minutes, then filter by line with one click, without writing a single formula.',
