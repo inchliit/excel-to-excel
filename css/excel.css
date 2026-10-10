@@ -165,3 +165,21 @@
 .xg-cell.ti-target { box-shadow: inset 0 0 0 2px #e8590c; }
 .xg-cell.ti-cf { background: #ffc9c9; color: #9b1c1c; }
 .xg-cell.ti-err { color: #c62828; font-weight: 700; }
+
+/* ---------- phones: try-it as a native-size full-screen panel ---------- */
+.ti-mobile { position: fixed; inset: 0; z-index: 50; background: var(--bg); color: var(--ink); overflow-y: auto; padding: 12px 12px 28px; display: none;
+  font-family: var(--font); font-size: 16px; -webkit-text-size-adjust: 100%; }
+.ti-mobile.show { display: block; }
+.ti-mobile .tim-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ti-mobile .tim-head h3 { font-size: 18px; margin: 0; flex: 1; color: #fff; }
+.ti-mobile .tryit-root { position: static; display: flex; flex-direction: column; gap: 12px; }
+.ti-mobile .ti-side { order: 1; }
+.ti-mobile .ti-sheet { order: 2; overflow-x: auto; max-width: 100%; }
+.ti-mobile .ti-btn { min-height: 44px; }
+.ti-mobile .ti-hist { height: 190px; }
+.ti-mobile-note { color: var(--muted); font-size: 20px; padding: 20px; }
+.rotate-hint { display: none; }
+@media (max-width: 600px) and (orientation: portrait) {
+  .rotate-hint { display: block; position: fixed; top: 10px; left: 10px; right: 10px; z-index: 40; background: var(--panel); border: 1px solid var(--xl);
+    color: var(--ink); font: 600 14px var(--font); padding: 8px 12px; border-radius: 10px; text-align: center; }
+}

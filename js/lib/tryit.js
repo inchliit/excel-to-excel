@@ -210,7 +210,18 @@
     section.dataset.mounted = '1';
     const ti = trick.tryit;
     const esc = s => window.DECK.esc(s);
-    const rootEl = section.querySelector('.tryit-root');
+    // Phones: the 16:9 canvas is scaled to ~30%, so the try-it opens as a native-size full-screen panel instead.
+    let rootEl = section.querySelector('.tryit-root');
+    if (window.matchMedia && window.matchMedia('(max-width: 760px), (max-height: 480px)').matches) {
+      const ov = document.createElement('div');
+      ov.className = 'ti-mobile';
+      ov.dataset.for = section.id;
+      ov.innerHTML = '<div class="tim-head"><button class="ti-btn tim-back">↑ Demo</button><h3>Try it · ' + esc(trick.title) + '</h3></div><div class="tryit-root"></div>';
+      document.body.appendChild(ov);
+      ov.querySelector('.tim-back').addEventListener('click', () => { ov.classList.remove('show'); if (window.Reveal) window.Reveal.up(); });
+      rootEl.innerHTML = '<p class="ti-mobile-note">The try-it box is open full-screen on this device.</p>';
+      rootEl = ov.querySelector('.tryit-root');
+    }
     rootEl.innerHTML =
       '<div class="ti-sheet"></div>' +
       '<div class="ti-side">' +
@@ -268,6 +279,10 @@
           el.classList.toggle('ti-err', /^#/.test(r.cells[k]));
         });
         grid.formulaBar(r.formula || normalize(formula));
+        if (rootEl.closest('.ti-mobile') && sheetEl.scrollWidth > sheetEl.clientWidth + 4) {
+          const c = grid.cell(ti.target).getBoundingClientRect(), sr = sheetEl.getBoundingClientRect();
+          sheetEl.scrollLeft += (c.left - sr.left) - sr.width / 2 + c.width / 2;
+        }
         if (r.cfRows && ti.cfRange) {
           const g = range(ti.cfRange);
           r.cfRows.forEach(row => { for (let c = g.c0; c <= g.c1; c++) { const el = grid.cell(a1(row, c)); if (el) el.classList.add('ti-cf'); } });
@@ -307,5 +322,10 @@
     });
   }
 
-  root.TRYIT = { mount, loadHF };
+  // Show the phone panel only while its try-it slide is current.
+  function sync(cur) {
+    document.querySelectorAll('.ti-mobile').forEach(o => o.classList.toggle('show', !!cur && o.dataset.for === cur.id));
+  }
+
+  root.TRYIT = { mount, sync, loadHF };
 })(typeof window !== 'undefined' ? window : globalThis);

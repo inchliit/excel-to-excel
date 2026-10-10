@@ -85,6 +85,7 @@
       [Reveal.getSlide(h - 1), Reveal.getSlide(h + 1)].forEach(s => renderSection(trickIn(s), false));
       const cur = Reveal.getCurrentSlide();
       if (cur.dataset.tryit && window.TRYIT) window.TRYIT.mount(cur, byId[cur.dataset.tryit]);
+      if (window.TRYIT && window.TRYIT.sync) window.TRYIT.sync(cur);
       renderSection(cur.dataset.trick ? cur : null, false);
     }
     Reveal.initialize({
