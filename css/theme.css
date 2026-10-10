@@ -54,10 +54,8 @@ html, body, .reveal-viewport { background: radial-gradient(1200px 700px at 70% -
 .caption.show { opacity: 1; }
 .caption.cap-in { animation: capIn .45s ease-out both; }
 @keyframes capIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.try-badge { position: absolute; right: 24px; top: 30px; display: none; }
-.t-slide .try-badge { display: block; right: 24px; top: auto; bottom: 18px; font: 700 15px var(--font); color: #0b1a12; background: var(--accent);
-  padding: 6px 12px; border-radius: 999px; box-shadow: 0 4px 14px rgba(255,209,102,.3); }
-.t-slide:has(.try-badge) .caption { width: 760px; }
+.try-badge { flex: none; font: 700 15px var(--font); color: #0b1a12; background: var(--accent); padding: 6px 12px; border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(255,209,102,.3); white-space: nowrap; }
 .reveal .fragment.step { position: absolute !important; width: 0; height: 0; overflow: hidden; opacity: 0 !important; pointer-events: none; }
 
 /* replay: no motion while rebuilding earlier steps */

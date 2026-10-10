@@ -28,12 +28,12 @@
       alt = '<div class="rail-alt"><b>' + esc(m ? m[1] : 'Older Excel') + '</b>' + esc(m ? m[2] : t.alt) + '</div>';
     }
     const frags = steps.map((_, k) => '<span class="fragment step" data-fragment-index="' + k + '"></span>').join('');
-    const badge = t.tryit ? '<div class="try-badge">↓ Try it yourself</div>' : '';
+    const badge = t.tryit ? '<span class="try-badge">↓ Try it yourself</span>' : '';
     return '<section class="t-slide act' + t.act + '" id="' + slideId(t) + '" data-trick="' + esc(t.id) + '">' +
-      '<header class="t-head"><span class="t-num">' + pad(t.n) + '</span><h2>' + esc(t.title) + '</h2>' + pill(t.version) + '</header>' +
+      '<header class="t-head"><span class="t-num">' + pad(t.n) + '</span><h2>' + esc(t.title) + '</h2>' + badge + pill(t.version) + '</header>' +
       '<aside class="rail"><p class="tagline">' + esc(t.tagline) + '</p><div class="how">' + how + '</div>' +
       '<div class="why"><span class="lbl">Why an IE cares</span>' + esc(t.why) + '</div>' + alt + '</aside>' +
-      '<div class="stage"></div><div class="caption"></div>' + badge + frags + notesHTML(t.notes) + '</section>';
+      '<div class="stage"></div><div class="caption"></div>' + frags + notesHTML(t.notes) + '</section>';
   }
 
   function tryitSection(t) {
