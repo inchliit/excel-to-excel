@@ -1,13 +1,16 @@
 // Integration walk (run with the Playwright MCP: browser_run_code_unsafe { filename: this file }).
 // Steps every trick slide forward and back; reports fallbacks, missing captions, stage overflow and page errors.
+// Public deck: first run `async () => { globalThis.WALK_URL = 'https://inchliit.github.io/excel-to-excel/index.html'; }`.
 async (page) => {
   const p = await page.context().newPage();
+  await p.bringToFront();  // background pages get no animation frames, which stalls reveal and rAF polling
   await p.setViewportSize({ width: 1280, height: 720 });
   const errors = [];
   p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
   p.on('pageerror', e => errors.push('pageerror: ' + e.message));
-  await p.goto('http://127.0.0.1:8797/index.html?r=' + Date.now() + '#/title');
-  await p.waitForFunction(() => document.documentElement.classList.contains('deck-ready'));
+  const base = globalThis.WALK_URL || 'http://127.0.0.1:8797/index.html';  // set WALK_URL to walk the public deck
+  await p.goto(base + '?r=' + Date.now() + '#/title');
+  await p.waitForFunction(() => document.documentElement.classList.contains('deck-ready'), null, { polling: 250, timeout: 45000 });
   const report = await p.evaluate(async () => {
     const wait = ms => new Promise(r => setTimeout(r, ms));
     const out = [];
@@ -45,5 +48,5 @@ async (page) => {
     return out;
   });
   await p.close();
-  return JSON.stringify({ errors, report }, null, 1);
+  return JSON.stringify({ url: base, errors, report }, null, 1);
 }

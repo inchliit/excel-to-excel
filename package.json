@@ -3,7 +3,8 @@
   "private": true,
   "description": "Excel to Excel webinar deck: dev checks only (the deck itself has no build step)",
   "scripts": {
-    "test": "node tests/check-tricks.mjs && node tests/check-tryits.mjs"
+    "test": "node tests/check-bundle.mjs && node tests/check-tricks.mjs && node tests/check-tryits.mjs",
+    "bundle": "python3 tools/bundle.py"
   },
   "devDependencies": {
     "hyperformula": "3.4.0",
