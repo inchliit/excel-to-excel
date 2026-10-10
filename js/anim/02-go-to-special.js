@@ -48,7 +48,6 @@
   // ---- helpers (local to this file) ----
   const TRANSIENT = '.ui-keys, .ui-dialog, .ui-ribbon, .ui-cursor, .ui-menu, .ui-callout, .ui-tag';
   function clear(ctx) { ctx.el.querySelectorAll(TRANSIENT).forEach(e => { if (!e.classList.contains('keep')) e.remove(); }); }
-  function seq(ctx, animate, ms, fn) { if (animate) ctx.later(ms, fn); else fn(); }
   function delay(el, ms, animate) {
     if (!el || !animate) return el;
     el.style.animationDelay = ms + 'ms';
@@ -158,7 +157,7 @@
         delay(ctx.ui.tag('← a formula, not a value', { x: 196, y: 28, tone: 'warn' }), 100, animate);
         delay(ctx.ui.callout({
           text: 'Freeze it: <kbd>Ctrl</kbd>+<kbd>C</kbd>, then <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>V</kbd> › Values.',
-          x: RX, y: 132, w: 340, tone: 'info' }), 350, animate);
+          x: RX, y: 132, w: 390, tone: 'info' }), 350, animate);
         ctx.caption('They are formulas: freeze them as values before you sort.');
       }
     ]

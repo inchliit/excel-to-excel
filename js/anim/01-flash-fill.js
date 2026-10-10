@@ -129,7 +129,7 @@
         delay(ctx.ui.tag('← plain text, no formula', { x: 236, y: 28, tone: 'info' }), 150, animate);
         delay(ctx.ui.callout({
           text: 'Result = plain values, not formulas.<br>Spot-check: inconsistent rows fool it.',
-          x: RX, y: 96, w: 290, tone: 'warn' }), 400, animate);
+          x: RX - 4, y: 96, w: 276, tone: 'warn' }), 400, animate);
         ctx.caption('New or changed codes? Run Ctrl+E again, then spot-check.');
       }
     ]

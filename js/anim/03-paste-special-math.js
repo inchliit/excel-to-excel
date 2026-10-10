@@ -131,7 +131,7 @@
         clear(ctx);
         delay(ctx.ui.callout({
           text: 'Multiply by 1 turns text-numbers into numbers; ×1.1 = +10% on a whole price list.',
-          x: RX, y: 110, w: 380, tone: 'info' }), 0, animate);
+          x: RX, y: 110, w: 360, tone: 'info' }), 0, animate);
         ctx.caption('Add, Subtract, Multiply, Divide: a whole range in one paste.');
       }
     ]
