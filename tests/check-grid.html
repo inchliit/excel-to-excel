@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>check-grid</title>
+<link rel="stylesheet" href="../css/theme.css"><link rel="stylesheet" href="../css/excel.css"></head>
+<body>
+<section id="s1" style="position:relative;width:1280px;height:720px"><div class="stage"></div><div class="caption"></div></section>
+<pre id="result">RUNNING</pre>
+<script src="../js/lib/registry.js"></script>
+<script src="../js/lib/steps.js"></script>
+<script src="../js/lib/grid.js"></script>
+<script>
+// XGrid contract checks (plan Interfaces → XGrid).
+(function () {
+  const out = document.getElementById('result');
+  const errs = [];
+  const eq = (name, got, want) => { if (JSON.stringify(got) !== JSON.stringify(want)) errs.push(name + ': got ' + JSON.stringify(got) + ' want ' + JSON.stringify(want)); };
+  try {
+    let g;
+    const trick = { stage(ctx) { g = ctx.grid({ cols: 5, rows: 6, data: [['Line', 'Units', 'Defects', 'Yield'], ['L1', 412, 6, 0.9854], ['L2', 1250.5, 4, 0.99]],
+      formats: { 'D2:D6': '0.0%', 'B2:B6': '#,##0' } }); }, steps: [] };
+    DECK.render(trick, -1, false, document.getElementById('s1'));
+    eq('A1 text', g.cell('A1').textContent, 'Line');
+    eq('B3 #,##0', g.cell('B3').textContent, '1,251');
+    eq('D2 0.0%', g.cell('D2').textContent, '98.5%');
+    eq('value raw', g.value('B3'), 1250.5);
+    eq('column header D', g.el.querySelector('.xg-colhead[data-col="3"]').textContent, 'D');
+    eq('row header 6', g.el.querySelector('.xg-rowhead[data-row="6"]').textContent, '6');
+    g.set('C3', 7); eq('set', g.cell('C3').textContent, '7');
+    g.setRange('A4', [['L3', 389, 8]]); eq('setRange', [g.cell('A4').textContent, g.cell('C4').textContent], ['L3', '8']);
+    g.select('B2:C3'); eq('name box', g.el.querySelector('.xg-namebox').textContent, 'B2');
+    const sel = g.el.querySelector('.xg-sel'); eq('selection visible', !!sel && sel.style.display !== 'none', true);
+    g.enter('E2', 0.5, '=C2/4', false);
+    g.select('E2');
+    eq('formula bar shows formula', g.el.querySelector('.xg-fx-text').textContent, '=C2/4');
+    g.mark('A2:A3', 'hl-yellow'); eq('mark', g.cell('A3').classList.contains('hl-yellow'), true);
+    g.unmark('hl-yellow'); eq('unmark', g.cell('A3').classList.contains('hl-yellow'), false);
+    g.type('B5', '=SUM(B2:B4)', false); eq('type instant bar', g.el.querySelector('.xg-fx-text').textContent, '=SUM(B2:B4)');
+    eq('type instant cell', g.cell('B5').textContent, '=SUM(B2:B4)');
+    g.spill('A6', [['x', 'y']], false); eq('spill', [g.cell('A6').textContent, g.cell('B6').textContent], ['x', 'y']);
+    eq('spill class', g.cell('B6').classList.contains('spill'), true);
+    g.fill('C2', 'C2:C4', [[1], [2], [3]], false); eq('fill', g.cell('C4').textContent, '3');
+    g.refBox('B2:B4', 1); eq('refBox', g.el.querySelectorAll('.xg-ref').length, 1);
+  } catch (e) { errs.push('threw: ' + e.message); }
+  out.textContent = errs.length ? 'FAIL\n' + errs.join('\n') : 'PASS';
+  document.title = 'check-grid: ' + out.textContent.split('\n')[0];
+})();
+</script>
+</body></html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>check-replay</title></head>
+<body>
+<section id="s1"><div class="stage"></div><div class="caption"></div></section>
+<section id="s2"><div class="stage"></div><div class="caption"></div></section>
+<pre id="result">RUNNING</pre>
+<script src="../js/lib/registry.js"></script>
+<script src="../js/lib/steps.js"></script>
+<script>
+// Review Focus 1: fast clicking / backtracking must leave the stage identical to a clean render.
+(async function () {
+  const out = document.getElementById('result');
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  try {
+    const trick = {
+      stage(ctx) { ctx.box({ cls: 'base', html: 'base' }); },
+      steps: ['a', 'b', 'c', 'd'].map((v, k) => (ctx, animate) => {
+        const b = ctx.box({ cls: 'step' + k, html: v });
+        if (animate) setTimeout(() => { if (ctx.alive()) b.textContent = v + '!'; }, 30);
+        if (animate && k === 3) setTimeout(() => { if (ctx.alive()) ctx.el.appendChild(document.createTextNode('LATE')); }, 60);
+      })
+    };
+    const s1 = document.getElementById('s1'), s2 = document.getElementById('s2');
+    DECK.render(trick, 0, true, s1);
+    DECK.render(trick, 3, true, s1);
+    DECK.render(trick, 1, true, s1);
+    await sleep(200);
+    const a = s1.querySelector('.stage').innerHTML;
+    DECK.render(trick, 1, true, s2);
+    await sleep(200);
+    const b = s2.querySelector('.stage').innerHTML;
+    const boxes = s1.querySelectorAll('.stage > .box').length;
+    const pass = a === b && boxes === 3 && !a.includes('LATE');
+    out.textContent = pass ? 'PASS' : 'FAIL boxes=' + boxes + '\n' + a + '\n---\n' + b;
+  } catch (e) {
+    out.textContent = 'FAIL ' + e.message;
+  }
+  document.title = 'check-replay: ' + out.textContent.split('\n')[0];
+})();
+</script>
+</body></html>
