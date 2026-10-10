@@ -143,6 +143,12 @@ html, body, .reveal-viewport { background: radial-gradient(1200px 700px at 70% -
 .qa-link { display: flex; align-items: center; gap: 28px; margin-top: 24px; }
 .qa-link .url-card.big { margin-top: 0; }
 
+.dl-btn { display: inline-flex; flex-direction: column; gap: 2px; align-self: flex-start; margin-top: 30px; padding: 14px 22px; border-radius: 14px;
+  background: var(--xl); border: 1px solid var(--xl3); color: #fff !important; font: 800 24px var(--font); box-shadow: 0 10px 30px rgba(16,124,65,.35); }
+.dl-btn span { font: 600 15px var(--font); color: #d4f5e2; }
+.dl-btn:hover { filter: brightness(1.12); }
+.qa-slide .dl-btn { align-self: center; }
+
 /* act accent colours on chips/cols */
 .act1 .ag-act, .act-slide.act1 .act-num { color: #5fe0a0; }
 .act2 .ag-act, .act-slide.act2 .act-num { color: #8cc8ff; }

@@ -727,8 +727,9 @@ function extendTrick(id, ext) { window.TRICK_EXT[id] = ext; }
     if (typeof b === 'string') return typeof a === 'string' && a.trim().toUpperCase() === b.trim().toUpperCase();
     return empty(a) && empty(b);
   }
-  function errorResult(v) {
-    return { status: 'error', title: v.value, message: ERRORS[v.value] || 'Excel would show ' + v.value + '.' };
+  function errorResult(v, ti) {
+    const base = ERRORS[v.value] || 'Excel would show ' + v.value + '.';
+    return { status: 'error', title: v.value, message: base + (ti && ti.hint ? ' Hint: ' + ti.hint : '') };
   }
 
   function evaluate(NS, ti, raw) {
@@ -754,15 +755,19 @@ function extendTrick(id, ext) { window.TRICK_EXT[id] = ext; }
     if (ti.mode === 'value' || ti.mode === 'random') {
       const v = get(t.row, t.col);
       cells[ti.target] = display(v);
-      if (isErr(v)) return Object.assign(errorResult(v), { cells });
+      if (isErr(v)) return Object.assign(errorResult(v, ti), { cells });
       if (ti.mode === 'value') ok = same(v, ti.expected);
       else {
         if (typeof v !== 'number') return { status: 'wrong', title: 'Not a number', message: 'The formula should return a time in minutes.', cells };
+        const used = functionsIn(f);
+        const missing = (ti.mustUse || []).filter(fn => !used.has(fn.toUpperCase()));
+        if (missing.length) return { status: 'wrong', title: 'Not quite', message: 'Use ' + missing.join(' + ') + ' so every recalculation draws a new realistic time. Hint: ' + ti.hint, cells };
         const n = (ti.random && ti.random.trials) || 500, samples = [];
         for (let i = 0; i < n; i++) { hf.setCellContents(A(t.row, t.col), [[f]]); const x = get(t.row, t.col); if (typeof x === 'number') samples.push(x); }
         const mean = samples.reduce((s, x) => s + x, 0) / Math.max(1, samples.length);
         const sd = Math.sqrt(samples.reduce((s, x) => s + (x - mean) * (x - mean), 0) / Math.max(1, samples.length - 1));
-        ok = samples.length === n && Math.abs(mean - ti.random.mean) <= 0.1 * Math.abs(ti.random.mean);
+        ok = samples.length === n && Math.abs(mean - ti.random.mean) <= 0.1 * Math.abs(ti.random.mean) &&
+          (!ti.random.sd || Math.abs(sd - ti.random.sd) <= 0.25 * ti.random.sd);
         result = { samples, mean, sd };
       }
     } else if (ti.mode === 'spill') {
@@ -775,7 +780,7 @@ function extendTrick(id, ext) { window.TRICK_EXT[id] = ext; }
       }
       const below = get(t.row + exp.length, t.col);
       if (!empty(below) && !isErr(below)) { ok = false; cells[a1(t.row + exp.length, t.col)] = display(below); }
-      if (firstErr && !ok) return Object.assign(errorResult(firstErr), { cells });
+      if (firstErr && !ok) return Object.assign(errorResult(firstErr, ti), { cells });
     } else {
       const g = range(ti.fill);
       for (let r = g.r0; r <= g.r1; r++) for (let c = g.c0; c <= g.c1; c++) {
@@ -784,7 +789,7 @@ function extendTrick(id, ext) { window.TRICK_EXT[id] = ext; }
         if (isErr(v) && !firstErr) firstErr = v;
         if (!same(v, ti.expected[r - g.r0][c - g.c0])) ok = false;
       }
-      if (firstErr && !ok) return Object.assign(errorResult(firstErr), { cells });
+      if (firstErr && !ok) return Object.assign(errorResult(firstErr, ti), { cells });
     }
 
     const out = { status: ok ? 'ok' : 'wrong', cells, formula: f };
@@ -4208,6 +4213,9 @@ extendTrick('filter-sort', (function () {
       (ctx, animate) => {
         if (ctx.rb) { ctx.rb.remove(); ctx.rb = null; }
         const c = drawPareto(ctx, true, false);
+        // Excel's Pareto chart has no 80% line: label ours so nobody hunts for it in Excel
+        const g80 = Array.from(c.querySelectorAll('text.lbl')).find(t => t.textContent === '80%');
+        if (g80) g80.textContent = '80% guide (we added it)';
         const bars = c.querySelectorAll('rect.bar');
         bars.forEach((b, i) => { b.classList.toggle('alt', i >= TOP); if (animate && i >= TOP) b.classList.add('t15-grey'); });
         cumLabels(c).forEach((t, i) => {
@@ -4216,14 +4224,14 @@ extendTrick('filter-sort', (function () {
           if (animate) { t.classList.add('t15-in'); t.style.animationDelay = (0.5 + 0.35 * i) + 's'; }
         });
         if (animate) {
-          const hl = c.querySelector('line.hline'), lab = Array.from(c.querySelectorAll('text.lbl')).find(t => t.textContent === '80%');
+          const hl = c.querySelector('line.hline'), lab = g80;
           [hl, lab].forEach(e => { if (e) e.classList.add('t15-in'); });
         }
         SORTED.slice(0, TOP).forEach(([cause]) => {
           const r = DATA.findIndex(d => d[0] === cause) + 2;
           ctx.g.mark('A' + r + ':B' + r, 'hl-green');
         });
-        ctx.caption('Cumulative: ' + CUM.slice(0, TOP).map(pct).join(' → ') + '. The top ' + TOP + ' pass the 80% line.');
+        ctx.caption('Cumulative: ' + CUM.slice(0, TOP).map(pct).join(' → ') + '. Top ' + TOP + ' pass our 80% guide.');
       },
       // 4 · the decision
       (ctx) => {
@@ -5252,6 +5260,8 @@ extendTrick('filter-sort', (function () {
 /* static.js — title, follow-along, versions, agenda, act dividers, Power Query teaser, recap, Q&A. */
 (function () {
   const URL_TEXT = 'inchliit.github.io/excel-to-excel';
+  const XLSX = 'downloads/Excel-to-Excel-practice.xlsx';
+  const DL = '<a class="dl-btn" href="' + XLSX + '" download>⬇ Practice workbook (.xlsx)<span>same data as the slides · a Check cell tells you when you\'re right</span></a>';
   const ACTS = {
     1: { title: 'Capture & clean data', sub: 'Get messy shop-floor data into shape in seconds.' },
     2: { title: 'Formulas that think', sub: 'Lookups, conditions and live lists that update themselves.' },
@@ -5295,9 +5305,10 @@ extendTrick('filter-sort', (function () {
             '<div class="card"><div class="card-ico"><kbd>←</kbd><kbd>→</kbd></div><h3>Move between tricks</h3><p>Arrow keys, or swipe on a phone.</p></div>' +
             '<div class="card"><div class="card-ico"><kbd>↓</kbd></div><h3>Try it yourself</h3><p>On tricks with a <b>↓ Try it</b> badge, go down to type the formula in a live mini-sheet.</p></div>' +
             '<div class="card"><div class="card-ico link-ico">🔗</div><h3>Open the deck</h3><p><b>' + URL_TEXT + '</b><br>Best on a laptop. On a phone, turn it sideways.</p></div>' +
-            '</div>',
+            '</div>' + DL,
           notes: '- Show the three controls: left/right to move, down for Try-it boxes.\n' +
-            '- Students can browse at their own pace; the link stays up after the webinar.'
+            '- Students can browse at their own pace; the link stays up after the webinar.\n' +
+            '- Point out the green button: a practice workbook with all 20 examples, yellow cells to fill and a Check cell that turns green when right.'
         },
         {
           id: 'versions', cls: 'versions-slide',
@@ -5368,8 +5379,8 @@ extendTrick('filter-sort', (function () {
           id: 'qa', cls: 'qa-slide',
           html: '<h1 class="qa-title">Questions?</h1><p class="qa-sub">Practice anytime: every <b>↓ Try it</b> box stays online.</p>' +
             '<div class="qa-link"><div class="url-card big"><span>Deck</span><b>' + URL_TEXT + '</b></div>' +
-            '<div class="qr-card inline"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"></div></div>',
-          notes: '- Open the floor for Q&A.\n- Remind them the link stays up for practice.'
+            '<div class="qr-card inline"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"></div></div>' + DL,
+          notes: '- Open the floor for Q&A.\n- Remind them the link stays up for practice, and to download the practice workbook (green button).'
         }
       ];
     }

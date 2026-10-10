@@ -1,6 +1,8 @@
 /* static.js — title, follow-along, versions, agenda, act dividers, Power Query teaser, recap, Q&A. */
 (function () {
   const URL_TEXT = 'inchliit.github.io/excel-to-excel';
+  const XLSX = 'downloads/Excel-to-Excel-practice.xlsx';
+  const DL = '<a class="dl-btn" href="' + XLSX + '" download>⬇ Practice workbook (.xlsx)<span>same data as the slides · a Check cell tells you when you\'re right</span></a>';
   const ACTS = {
     1: { title: 'Capture & clean data', sub: 'Get messy shop-floor data into shape in seconds.' },
     2: { title: 'Formulas that think', sub: 'Lookups, conditions and live lists that update themselves.' },
@@ -44,9 +46,10 @@
             '<div class="card"><div class="card-ico"><kbd>←</kbd><kbd>→</kbd></div><h3>Move between tricks</h3><p>Arrow keys, or swipe on a phone.</p></div>' +
             '<div class="card"><div class="card-ico"><kbd>↓</kbd></div><h3>Try it yourself</h3><p>On tricks with a <b>↓ Try it</b> badge, go down to type the formula in a live mini-sheet.</p></div>' +
             '<div class="card"><div class="card-ico link-ico">🔗</div><h3>Open the deck</h3><p><b>' + URL_TEXT + '</b><br>Best on a laptop. On a phone, turn it sideways.</p></div>' +
-            '</div>',
+            '</div>' + DL,
           notes: '- Show the three controls: left/right to move, down for Try-it boxes.\n' +
-            '- Students can browse at their own pace; the link stays up after the webinar.'
+            '- Students can browse at their own pace; the link stays up after the webinar.\n' +
+            '- Point out the green button: a practice workbook with all 20 examples, yellow cells to fill and a Check cell that turns green when right.'
         },
         {
           id: 'versions', cls: 'versions-slide',
@@ -117,8 +120,8 @@
           id: 'qa', cls: 'qa-slide',
           html: '<h1 class="qa-title">Questions?</h1><p class="qa-sub">Practice anytime: every <b>↓ Try it</b> box stays online.</p>' +
             '<div class="qa-link"><div class="url-card big"><span>Deck</span><b>' + URL_TEXT + '</b></div>' +
-            '<div class="qr-card inline"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"></div></div>',
-          notes: '- Open the floor for Q&A.\n- Remind them the link stays up for practice.'
+            '<div class="qr-card inline"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"></div></div>' + DL,
+          notes: '- Open the floor for Q&A.\n- Remind them the link stays up for practice, and to download the practice workbook (green button).'
         }
       ];
     }
