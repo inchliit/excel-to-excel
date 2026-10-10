@@ -5509,6 +5509,10 @@ window.DEV_TRICK = {
     });
     S.outro(tricks).forEach(s => { html += staticSection(s); });
     document.querySelector('.reveal .slides').innerHTML = html;
+    // host logo, small, bottom-left of every slide (stacks get it on each of their inner slides)
+    document.querySelectorAll('.reveal .slides section').forEach(sec => {
+      if (!sec.querySelector('section')) sec.insertAdjacentHTML('beforeend', '<div class="brand"><img src="assets/logo.png" alt="Ask Lex PH Academy"></div>');
+    });
     return byId;
   }
 

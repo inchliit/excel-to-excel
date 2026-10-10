@@ -149,6 +149,10 @@ html, body, .reveal-viewport { background: radial-gradient(1200px 700px at 70% -
 .dl-btn:hover { filter: brightness(1.12); }
 .qa-slide .dl-btn { align-self: center; }
 
+.reveal .slides section .brand { position: absolute; left: 24px; bottom: 12px; z-index: 5; background: #fff; border-radius: 8px; padding: 5px 9px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.35); line-height: 0; pointer-events: none; }
+.reveal .slides section .brand img { height: 36px; width: auto; display: block; margin: 0; border: 0; box-shadow: none; max-width: none; }
+
 /* act accent colours on chips/cols */
 .act1 .ag-act, .act-slide.act1 .act-num { color: #5fe0a0; }
 .act2 .ag-act, .act-slide.act2 .act-num { color: #8cc8ff; }

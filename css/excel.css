@@ -142,7 +142,7 @@
 .spark.anim .col { transform-box: fill-box; transform-origin: bottom; animation: grow .5s ease-out both; }
 
 /* ---------- try-it panel ---------- */
-.tryit-root { position: absolute; left: 24px; right: 24px; top: 96px; bottom: 24px; display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+.tryit-root { position: absolute; left: 24px; right: 24px; top: 96px; bottom: 68px; display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
 .ti-sheet { overflow: auto; background: #fff; border-radius: 8px; box-shadow: 0 12px 34px rgba(0,0,0,.4); }
 .ti-sheet .xg { position: relative !important; box-shadow: none; border: 0; }
 .ti-side { display: flex; flex-direction: column; gap: 12px; }
