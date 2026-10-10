@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 *.pdf.tmp
 .claude/
+excel-to-excel.pdf

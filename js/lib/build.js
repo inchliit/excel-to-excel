@@ -89,7 +89,13 @@
       transition: 'slide', transitionSpeed: 'fast', backgroundTransition: 'fade', pdfSeparateFragments: false,
       plugins: window.RevealNotes ? [window.RevealNotes] : []
     }).then(() => {
-      document.querySelectorAll('section[data-trick]').forEach(s => renderSection(s, false));
+      const pdf = /print-pdf/.test(location.search);
+      document.querySelectorAll('section[data-trick]').forEach(s => {
+        const t = byId[s.dataset.trick];
+        if (pdf && t) window.DECK.render(t, (t.steps || []).length - 1, false, s);
+        else renderSection(s, false);
+      });
+      if (pdf) { document.documentElement.classList.add('deck-ready'); return; }
       onSlide();
       Reveal.on('slidechanged', onSlide);
       Reveal.on('fragmentshown', e => { if (e.fragment.classList.contains('step')) renderSection(Reveal.getCurrentSlide(), true); });
