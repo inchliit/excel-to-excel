@@ -5517,7 +5517,7 @@ window.DEV_TRICK = {
       renderSection(cur.dataset.trick ? cur : null, false);
     }
     Reveal.initialize({
-      hash: true, fragmentInURL: false, width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 2.0, center: false,
+      hash: true, fragmentInURL: false, scrollActivationWidth: null, width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 2.0, center: false,
       controls: true, controlsTutorial: false, progress: true, slideNumber: 'c/t',
       transition: 'slide', transitionSpeed: 'fast', backgroundTransition: 'fade', pdfSeparateFragments: false,
       plugins: window.RevealNotes ? [window.RevealNotes] : []
