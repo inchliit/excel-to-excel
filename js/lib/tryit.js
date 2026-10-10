@@ -61,7 +61,10 @@
       }
       xlfilterSize(ast, state) {
         if (ast.args.length < 2) return ArraySize.error();
-        return this.arraySizeForAst(ast.args[0], state);
+        // Like HF's own FILTER: size with array arithmetic on, and return a fresh ArraySize. A range's size carries
+        // isRef, which HF counts as scalar, so a top-level FILTER would otherwise give #VALUE! instead of spilling.
+        const sz = this.arraySizeForAst(ast.args[0], { formulaAddress: state.formulaAddress, arraysFlag: true, formulaVertex: state.formulaVertex });
+        return new ArraySize(sz.width, sz.height);
       }
     }
     ExcelFilter.implementedFunctions = {

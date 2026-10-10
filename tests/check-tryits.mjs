@@ -68,6 +68,14 @@ for (const { id, tryit } of all) {
   }
 }
 
+// top-level FILTER must spill (not #VALUE!): unsorted is "wrong" for the sorted task, and "ok" for a FILTER-only task
+const bare = Core.evaluate(NS, fixtures[1].tryit, '=FILTER(A2:F6,F2:F6<0.85)');
+if (!bare || bare.status !== 'wrong') fail.push('top-level FILTER on sorted task should be "wrong", got ' + (bare && bare.status) + ' ' + (bare && bare.title));
+const filterOnly = Object.assign({}, fixtures[1].tryit, { mustUse: ['FILTER'], answer: '=FILTER(A2:F6,F2:F6<0.85)',
+  expected: [['M1', 'L1', 0.9, 0.9, 0.99, 0.802], ['M3', 'L2', 0.85, 0.9, 0.98, 0.75], ['M5', 'L3', 0.88, 0.9, 0.97, 0.768]] });
+const fo = Core.evaluate(NS, filterOnly, filterOnly.answer);
+if (!fo || fo.status !== 'ok') fail.push('top-level FILTER-only task should be "ok", got ' + (fo && fo.status) + ' ' + (fo && fo.title) + ' ' + (fo && fo.message));
+
 // wrong answers must be marked wrong (not ok)
 const wrong = Core.evaluate(NS, fixtures[0].tryit, '=SUMIFS(D2:D6,B2:B6,"L1")');
 if (!wrong || wrong.status !== 'wrong') fail.push('fx-value wrong answer should be "wrong", got ' + (wrong && wrong.status));
