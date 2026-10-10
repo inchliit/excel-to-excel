@@ -76,6 +76,10 @@ const filterOnly = Object.assign({}, fixtures[1].tryit, { mustUse: ['FILTER'], a
 const fo = Core.evaluate(NS, filterOnly, filterOnly.answer);
 if (!fo || fo.status !== 'ok') fail.push('top-level FILTER-only task should be "ok", got ' + (fo && fo.status) + ' ' + (fo && fo.title) + ' ' + (fo && fo.message));
 
+// random mode must not claim the random value is "exactly what Excel returns"
+const rnd = Core.evaluate(NS, fixtures[5].tryit, fixtures[5].tryit.answer);
+if (!rnd || /exactly what Excel returns/.test(rnd.message || '')) fail.push('random-mode success message should talk about randomness, got: ' + (rnd && rnd.message));
+
 // wrong answers must be marked wrong (not ok)
 const wrong = Core.evaluate(NS, fixtures[0].tryit, '=SUMIFS(D2:D6,B2:B6,"L1")');
 if (!wrong || wrong.status !== 'wrong') fail.push('fx-value wrong answer should be "wrong", got ' + (wrong && wrong.status));

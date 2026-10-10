@@ -40,8 +40,17 @@
     g.fill('C2', 'C2:C4', [[1], [2], [3]], false); eq('fill', g.cell('C4').textContent, '3');
     g.refBox('B2:B4', 1); eq('refBox', g.el.querySelectorAll('.xg-ref').length, 1);
   } catch (e) { errs.push('threw: ' + e.message); }
-  out.textContent = errs.length ? 'FAIL\n' + errs.join('\n') : 'PASS';
-  document.title = 'check-grid: ' + out.textContent.split('\n')[0];
+  // type() then enter() in the same animated step: the entered value must win over pending typing timers.
+  let g2;
+  const raceTrick = { stage(ctx) { g2 = ctx.grid({ cols: 3, rows: 4, data: [['A', 'B'], [1, 2]] }); },
+    steps: [(ctx, animate) => { g2.type('C2', '=SUM(A2:B2)', animate); g2.enter('C2', 3, '=SUM(A2:B2)', animate); }] };
+  DECK.render(raceTrick, 0, true, document.getElementById('s1'));
+  setTimeout(() => {
+    eq('type+enter race: cell shows value', g2.cell('C2').textContent, '3');
+    eq('type+enter race: not editing', g2.cell('C2').classList.contains('editing'), false);
+    out.textContent = errs.length ? 'FAIL\n' + errs.join('\n') : 'PASS';
+    document.title = 'check-grid: ' + out.textContent.split('\n')[0];
+  }, 2200);
 })();
 </script>
 </body></html>

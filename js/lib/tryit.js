@@ -170,7 +170,10 @@
       const used = functionsIn(f);
       const missing = (ti.mustUse || []).filter(fn => !used.has(fn.toUpperCase()));
       out.title = 'Correct!';
-      out.message = ti.mode === 'fill' ? 'Every cell matches, and the $ signs did their job.' : ti.mode === 'cf' ? 'Exactly the out-of-control rows light up.' : 'That\'s exactly what Excel returns.';
+      out.message = ti.mode === 'fill' ? 'Every cell matches, and the $ signs did their job.'
+        : ti.mode === 'cf' ? 'Exactly the out-of-control rows light up.'
+        : ti.mode === 'random' ? 'A realistic random time. Every recalculation (F9) draws a new one, so run 500 trials to see the spread.'
+        : 'That\'s exactly what Excel returns.';
       if (missing.length) out.nudge = 'Right answer! Now try it with ' + missing.join(' + ') + ', the trick from this slide.';
     } else {
       out.title = 'Not quite';

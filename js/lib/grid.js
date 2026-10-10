@@ -63,6 +63,7 @@
       this.vals = {};
       this.forms = {};
       this.cells = {};
+      this.typing = {};
 
       const root = document.createElement('div');
       root.className = 'xg box';
@@ -138,6 +139,9 @@
       el.textContent = fmt(v, this.formatOf(ref));
       el.classList.toggle('num', typeof v === 'number');
       el.classList.remove('editing');
+      // A value set while type() is still animating this cell wins: cancel the typing timers, show the full content.
+      const t = this.typing[ref];
+      if (t && t.active) { t.active = false; t.token++; this.formulaBar(this.contentOf(ref)); }
     }
     setRange(anchor, rows) {
       const a = parseRef(anchor);
@@ -171,13 +175,19 @@
       el.classList.remove('num');
       if (!animate) { el.textContent = text; this.formulaBar(text); return; }
       const ctx = this.ctx;
+      const key = String(ref).replace(/\$/g, '');
+      const t = this.typing[key] || (this.typing[key] = { token: 0, active: false });
+      const token = ++t.token;
+      t.active = true;
       const step = Math.max(18, Math.min(55, 1600 / Math.max(1, text.length)));
       el.textContent = '';
       if (this.fxEl) this.fxEl.textContent = '';
       for (let i = 1; i <= text.length; i++) {
         ctx.later(i * step, () => {
+          if (t.token !== token) return;
           el.textContent = text.slice(0, i);
           if (this.fxEl) { if (i === text.length) this.formulaBar(text); else this.fxEl.textContent = text.slice(0, i); }
+          if (i === text.length) t.active = false;
         });
       }
     }

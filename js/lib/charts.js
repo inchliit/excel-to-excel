@@ -101,7 +101,7 @@
         const lo = yMin != null ? yMin : Math.min(...all), hi = yMax != null ? yMax : Math.max(...all);
         const pad = (hi - lo) * 0.08 || 1;
         const y0 = yMin != null ? yMin : lo - pad, y1 = yMax != null ? yMax : hi + pad;
-        const n = Math.max(...series.map(s => s.values.length), band ? band.start + band.lo.length : 0);
+        const n = Math.max(...series.map(s => (s.start || 0) + s.values.length), band ? band.start + band.lo.length : 0);
         const X = i => L + (n <= 1 ? W / 2 : (W * i) / (n - 1));
         const Y = v => T + H - (H * (v - y0)) / (y1 - y0);
         for (let i = 0; i <= 4; i++) {
