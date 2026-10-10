@@ -47,6 +47,7 @@
   function build() {
     const S = window.STATIC;
     const tricks = (window.TRICKS || []).slice().sort((a, b) => a.n - b.n);
+    tricks.forEach(t => { const ext = (window.TRICK_EXT || {})[t.id]; if (ext) Object.assign(t, ext); });
     const byId = {};
     tricks.forEach(t => { byId[t.id] = t; });
     let html = '';

@@ -3,7 +3,7 @@ registerTrick({
   title: 'Go To Special › Blanks + Ctrl+Enter',
   tagline: 'Fill every gap in one go',
   version: 'All',
-  keys: ['F5', '=', '↑', 'Ctrl', 'Enter'],
+  keys: ['Ctrl', 'Enter'],
   formula: null,
   ribbon: 'Home › Find & Select › Go To Special › Blanks',
   why: 'Exported shift and ERP reports print each group label only once; fill the gaps before you sort, filter or pivot, or the totals go wrong.',

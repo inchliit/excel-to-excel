@@ -28,6 +28,29 @@ for (const f of files) {
   tricks[tricks.length - 1].__file = f;
 }
 
+// animation extensions: js/anim/NN-id.js → extendTrick(id, {stage, steps, tryit})
+const animDir = new URL('../js/anim/', import.meta.url);
+const animFiles = fs.existsSync(animDir) ? fs.readdirSync(animDir).filter(f => /^\d\d-[a-z0-9-]+\.js$/.test(f)).sort() : [];
+const ext = {};
+sandbox.extendTrick = (id, e) => { ext[id] = e; };
+for (const f of animFiles) {
+  const before = Object.keys(ext).length;
+  try {
+    vm.runInContext(fs.readFileSync(new URL(f, animDir), 'utf8'), sandbox, { filename: 'anim/' + f });
+  } catch (e) {
+    fail.push(`anim/${f}: throws on load: ${e.message}`);
+    continue;
+  }
+  if (Object.keys(ext).length !== before + 1) fail.push(`anim/${f}: must call extendTrick exactly once`);
+  const id = f.slice(3, -3);
+  if (!ext[id]) fail.push(`anim/${f}: must call extendTrick('${id}', ...)`);
+}
+for (const id of Object.keys(ext)) {
+  const t = tricks.find(x => x.id === id);
+  if (t) Object.assign(t, ext[id]);
+  else fail.push(`anim: extendTrick('${id}') has no matching trick`);
+}
+
 if (tricks.length !== 20) fail.push(`expected 20 tricks, found ${tricks.length}`);
 const seen = new Set();
 for (const t of tricks) {
