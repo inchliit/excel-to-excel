@@ -39,6 +39,7 @@
     eq('spill class', g.cell('B6').classList.contains('spill'), true);
     g.fill('C2', 'C2:C4', [[1], [2], [3]], false); eq('fill', g.cell('C4').textContent, '3');
     g.refBox('B2:B4', 1); eq('refBox', g.el.querySelectorAll('.xg-ref').length, 1);
+    eq('colorize skips quoted text', (XGrid.colorize('=SUMIFS(D2:D13,B2:B13,"L2")').match(/class="xg-r"/g) || []).length, 2);
   } catch (e) { errs.push('threw: ' + e.message); }
   // type() then enter() in the same animated step: the entered value must win over pending typing timers.
   let g2;

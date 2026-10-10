@@ -41,11 +41,13 @@
     if (!String(text).startsWith('=')) return esc(text);
     let i = 0;
     const seen = {};
-    return esc(text).replace(/(\$?[A-Z]{1,2}\$?\d{1,4}(?::\$?[A-Z]{1,2}\$?\d{1,4})?)(?![A-Za-z(])/g, m => {
+    const refs = seg => seg.replace(/(\$?[A-Z]{1,2}\$?\d{1,4}(?::\$?[A-Z]{1,2}\$?\d{1,4})?)(?![A-Za-z(])/g, m => {
       const key = m.replace(/\$/g, '');
       if (!(key in seen)) seen[key] = i++ % REF_COLORS.length;
       return '<span class="xg-r" style="color:' + REF_COLORS[seen[key]] + '">' + m + '</span>';
     });
+    // only colour references outside "quoted text" (e.g. the criterion "L2" is text, not a cell)
+    return String(text).split('"').map((seg, k) => (k % 2 ? esc(seg) : refs(esc(seg)))).join('&quot;');
   }
 
   class XGrid {

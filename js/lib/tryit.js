@@ -283,6 +283,7 @@
           if (!el) return;
           el.textContent = r.cells[k];
           el.classList.toggle('ti-err', /^#/.test(r.cells[k]));
+          el.classList.toggle('num', /^-?[\d,]*\.?\d+%?$/.test(r.cells[k]));
         });
         grid.formulaBar(r.formula || normalize(formula));
         if (rootEl.closest('.ti-mobile') && sheetEl.scrollWidth > sheetEl.clientWidth + 4) {
