@@ -6,6 +6,7 @@
     "test": "node tests/check-tricks.mjs && node tests/check-tryits.mjs"
   },
   "devDependencies": {
-    "hyperformula": "3.4.0"
+    "hyperformula": "3.4.0",
+    "qrcode": "^1.5.4"
   }
 }

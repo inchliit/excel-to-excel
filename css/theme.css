@@ -136,6 +136,14 @@ html, body, .reveal-viewport { background: radial-gradient(1200px 700px at 70% -
 .qa-title { font-size: 120px !important; font-weight: 850; }
 .qa-sub { font-size: 28px; color: #c8d5df; }
 
+.qr-card { position: absolute; right: 80px; bottom: 70px; width: 190px; background: #fff; border-radius: 16px; padding: 12px 12px 8px; text-align: center;
+  box-shadow: 0 16px 40px rgba(0,0,0,.45); z-index: 2; }
+.qr-card img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.qr-card span { display: block; font: 700 14px var(--font); color: #0f1720; margin-top: 4px; }
+.qr-card.inline { position: static; width: 150px; padding: 10px; }
+.qa-link { display: flex; align-items: center; gap: 28px; margin-top: 24px; }
+.qa-link .url-card.big { margin-top: 0; }
+
 /* act accent colours on chips/cols */
 .act1 .ag-act, .act-slide.act1 .act-num { color: #5fe0a0; }
 .act2 .ag-act, .act-slide.act2 .act-num { color: #8cc8ff; }

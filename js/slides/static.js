@@ -31,7 +31,8 @@
             '<h1>Excel <span class="to">to</span> <span class="xl">Excel</span></h1>' +
             '<p class="sub">20 Excel tricks you don\'t know — for Industrial Engineers</p>' +
             '<div class="url-card"><span>Follow along</span><b>' + URL_TEXT + '</b></div>' +
-            '</div>',
+            '</div>' +
+            '<div class="qr-card"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"><span>Scan to follow along</span></div>',
           notes: '- Welcome everyone. Today: 20 Excel tricks most people never learn, all with IE data.\n' +
             '- Ask them to open the link now: ' + URL_TEXT + '. Same slides, and they can try formulas themselves.\n' +
             '- Format: 4 acts, about 3–4 minutes per trick, Q&A at the end.'
@@ -115,7 +116,8 @@
         {
           id: 'qa', cls: 'qa-slide',
           html: '<h1 class="qa-title">Questions?</h1><p class="qa-sub">Practice anytime: every <b>↓ Try it</b> box stays online.</p>' +
-            '<div class="url-card big"><span>Deck</span><b>' + URL_TEXT + '</b></div>',
+            '<div class="qa-link"><div class="url-card big"><span>Deck</span><b>' + URL_TEXT + '</b></div>' +
+            '<div class="qr-card inline"><img src="assets/qr.svg" alt="QR code: ' + URL_TEXT + '"></div></div>',
           notes: '- Open the floor for Q&A.\n- Remind them the link stays up for practice.'
         }
       ];
