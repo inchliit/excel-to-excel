@@ -155,8 +155,8 @@ ${S}.xg-cell.t06-alarm{animation:t06alarm .5s ease-in-out 3}
         const st = ['B2', '$B$2', 'B$2', '$B2'];
         ctx.t06lens = lens(ctx, '=', st[0], '*C1');
         ctx.t06strip = strip(ctx, st, ['relative', 'absolute', 'row locked', 'column locked']);
-        ctx.t06keys = ctx.ui.keys(['F4', 'F4', 'F4'], { x: 610, y: LY });
-        ctx.t06mac = ctx.ui.tag('Mac: Cmd+T  ·  laptop: Fn+F4', { x: 610, y: LY + 70, tone: 'info' });
+        ctx.t06keys = ctx.ui.keys(['F4', 'F4', 'F4'], { x: 600, y: LY });
+        ctx.t06mac = ctx.ui.tag('Mac: Cmd+T  ·  laptop: Fn+F4', { x: 600, y: LY + 70, tone: 'info' });
         const show = k => { setLens(ctx.t06lens, '=', st[k], '*C1'); setStrip(ctx.t06strip, k); editShow(g, 'C2', '=' + st[k] + '*C1'); };
         beats(ctx, animate, [[0, () => show(0)], [480, () => show(1)], [450, () => show(2)], [450, () => show(3)]]);
       },
@@ -167,12 +167,12 @@ ${S}.xg-cell.t06-alarm{animation:t06alarm .5s ease-in-out 3}
         rm(ctx.t06strip); rm(ctx.t06keys);
         const st = ['C1', '$C$1', 'C$1'];
         ctx.t06strip = strip(ctx, st, ['relative', 'absolute', 'row locked']);
-        ctx.t06keys = ctx.ui.keys(['F4', 'F4'], { x: 610, y: LY });
+        ctx.t06keys = ctx.ui.keys(['F4', 'F4'], { x: 600, y: LY });
         const show = k => { setLens(ctx.t06lens, '=$B2*', st[k], ''); setStrip(ctx.t06strip, k); editShow(g, 'C2', '=$B2*' + st[k]); };
         beats(ctx, animate, [[0, () => show(0)], [480, () => show(1)], [450, () => show(2)],
           [550, () => {
             g.clearRefs(); g.refBox('B2:B6', 0); g.refBox('C1:G1', 1);
-            ctx.t06c = ctx.ui.callout({ x: 610, y: LY + 112, w: 290, tone: 'good',
+            ctx.t06c = ctx.ui.callout({ x: 600, y: LY + 112, w: 270, tone: 'good',
               text: '<b class="d">$</b>B: always the cost column<br><b class="d">$</b>1: always the qty row' });
           }]]);
       },
