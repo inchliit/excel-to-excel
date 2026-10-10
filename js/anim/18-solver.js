@@ -14,19 +14,23 @@
       P + '.t18-eq b{font-family:var(--mono)}' +
       P + '.t18-model.anim{animation:t18-up .4s ease-out .2s both}' +
       // dialogs
-      P + '.t18-dlg .dlg-body{padding:10px 14px}' +
+      P + '.t18-dlg .dlg-title{padding:7px 12px}' +
+      P + '.t18-dlg .dlg-body{padding:8px 14px}' +
+      P + '.t18-dlg .dlg-foot{padding:8px 14px}' +
       P + '.t18-dlg .dlg-field{font-size:15px;font-weight:700}' +
-      P + '.t18-r{display:flex;align-items:center;gap:10px;margin:6px 0}' +
+      P + '.t18-r{display:flex;align-items:center;gap:10px;margin:5px 0}' +
+      P + '.t18-meth{white-space:nowrap;gap:8px}' +
+      P + '.t18-meth .dlg-field{font-size:14px;min-width:0}' +
       P + '.t18-l{width:104px;flex:none}' +
       P + '.t18-grow{flex:1}' +
       P + '.t18-tiny{min-width:34px!important;color:#888}' +
-      P + '.t18-lab{margin:8px 0 2px}' +
+      P + '.t18-lab{margin:6px 0 2px}' +
       P + '.t18-cons{display:flex;gap:8px;margin-bottom:6px}' +
-      P + '.t18-list{flex:1;border:1px solid #8a8a8a;height:122px;padding:4px;font:700 15px var(--mono)}' +
+      P + '.t18-list{flex:1;border:1px solid #8a8a8a;height:108px;padding:4px;font:700 15px var(--mono)}' +
       P + '.t18-item{background:#dbeafe;padding:2px 6px;border-radius:2px}' +
-      P + '.t18-btns{display:flex;flex-direction:column;gap:4px;width:82px}' +
-      P + '.t18-btns span,' + P + '.t18-sb{border:1px solid #adadad;border-radius:4px;background:#fdfdfd;padding:1px 6px;font-size:13px;text-align:center}' +
-      P + '.t18-sb{padding:3px 10px}' +
+      P + '.t18-btns{display:flex;flex-direction:column;gap:3px;width:82px}' +
+      P + '.t18-btns span,' + P + '.t18-sb{border:1px solid #adadad;border-radius:4px;background:#fdfdfd;padding:1px 6px;font-size:13px;line-height:1.3;text-align:center}' +
+      P + '.t18-sb{padding:2px 8px}' +
       P + '.t18-dlg.anim .t18-v{animation:t18-in .3s ease-out both;animation-delay:var(--d,0s)}' +
       P + '.t18-out{animation:t18-out .2s ease-in .25s forwards!important}' +
       P + '.t18-msg{font-weight:700;font-size:15.5px;line-height:1.4;margin-bottom:10px}' +
@@ -113,7 +117,7 @@
     '<div class="t18-cons"><div class="t18-list"><div class="t18-item t18-v" style="--d:1.95s"><span style="color:' + DK.r + '">$D$5:$D$6</span> &lt;= <span style="color:' + DK.p + '">$F$5:$F$6</span></div></div>' +
     '<div class="t18-btns"><span>Add</span><span>Change</span><span>Delete</span><span>Reset All</span><span>Load/Save</span></div></div>' +
     '<div class="t18-r"><span class="check on t18-v" style="--d:2.25s">Make Unconstrained Variables Non-Negative</span></div>' +
-    '<div class="t18-r"><span>Select a Solving Method:</span><span class="dlg-field t18-v" style="--d:2.5s">Simplex LP ▾</span><span class="t18-sb">Options</span></div>';
+    '<div class="t18-r t18-meth"><span>Select a Solving Method:</span><span class="dlg-field t18-v" style="--d:2.5s">Simplex LP ▾</span><span class="t18-sb">Options</span></div>';
 
   const RESULTS =
     '<div class="t18-msg">Solver found a solution. All Constraints and optimality conditions are satisfied.</div>' +
@@ -129,7 +133,7 @@
     const XMAX = 90, YMAX = 110, sx = PW / XMAX, sy = PH / YMAX;
     const X = x => +(L + x * sx).toFixed(1), Y = y => +(T + PH - y * sy).toFixed(1);
     const id = 't18clip' + (++uid);
-    const iso = k => 'M' + X(-60) + ' ' + Y((k + 2400) / 30) + ' L' + X(110) + ' ' + Y((k - 4400) / 30);   // y = (k − 40x)/30
+    const iso = k => 'M' + X(0) + ' ' + Y(k / 30) + ' L' + X(k / 40) + ' ' + Y(0);   // 40x + 30y = k, first quadrant (k ≤ 3300)
     let s = '<defs><clipPath id="' + id + '"><rect x="' + L + '" y="' + T + '" width="' + PW + '" height="' + PH + '"/></clipPath></defs>';
     for (let v = 10; v <= XMAX; v += 10) s += '<line class="gl" x1="' + X(v) + '" x2="' + X(v) + '" y1="' + T + '" y2="' + (T + PH) + '"/>';
     for (let v = 10; v <= YMAX; v += 10) s += '<line class="gl" x1="' + L + '" x2="' + (L + PW) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/>';
@@ -252,7 +256,7 @@
       // 5 · enabling the add-in
       (ctx, animate) => {
         at(ctx, animate, 0, () => {
-          ctx.ui.callout({ x: 10, y: 440, w: 504, tone: 'info',
+          ctx.ui.callout({ x: 10, y: 440, w: 504 - 33, tone: 'info',            // content-box: +28 padding +5 border
             text: 'Enable once: File › Options › Add-ins › Manage Excel Add-ins › Go › ☑ Solver Add-in.' +
               '<span class="t18-mac">Mac: Tools › Excel Add-ins › ☑ Solver Add-In</span>' });
         });

@@ -47,7 +47,8 @@
   }
 
   // chart geometry (mirrors charts.line: L 50, R 70, T = title 32 + 6, B 30)
-  const CH = { x: 514, y: 16, w: 394, h: 300, yMin: 28000, yMax: 52000 };
+  const CH = { x: 514, y: 16, w: 394, h: 320, yMin: 28000, yMax: 52000 };
+  const CO_W = CH.w - 33;                            // ui-callout width is content-box (+28 padding, +5 border)
 
   extendTrick('data-table', {
     stage(ctx) {
@@ -92,7 +93,7 @@
           body: '<div class="dlg-row"><span class="t17-l">Row input cell:</span><span class="dlg-field t17-v" style="--d:1.3s"></span></div>' +
             '<div class="dlg-row"><span class="t17-l">Column input cell:</span><span class="dlg-field on t17-v" style="--d:1.6s;color:#C0504D">B4</span></div>' });
         ctx.dlg.classList.add('t17-dlg');
-        ctx.tip = ctx.ui.callout({ x: 514, y: 268, w: 394, tone: 'info',
+        ctx.tip = ctx.ui.callout({ x: 514, y: 318, w: CO_W, tone: 'info',
           text: 'Q values run <b>down a column</b> → use <b>Column input cell</b> = B4, the Q cell. Row input stays blank.' });
         if (animate) { ctx.dlg.style.animationDelay = '.95s'; ctx.tip.style.animationDelay = '2.1s'; }
         ctx.caption('Select D7:E15 → Data Table. Column input cell = B4, the Q cell.');
@@ -129,7 +130,7 @@
         svgEl(grp, 'line', { x1: ex, x2: ex, y1: T + 26, y2: T + Hh, stroke: '#2b8a3e', 'stroke-width': 2, 'stroke-dasharray': '5 4' });
         svgEl(grp, 'path', { d: 'M' + ex + ' ' + (ey - 7) + ' l7 7 l-7 7 l-7 -7 z', fill: '#2b8a3e', stroke: '#fff', 'stroke-width': 1.5 });
         svgEl(grp, 'text', { x: ex, y: T + 18, 'text-anchor': 'middle', style: 'fill:#2b8a3e' }, 'EOQ ≈ 1,095');
-        const co = ctx.ui.callout({ x: CH.x, y: 334, w: CH.w, tone: 'good',
+        const co = ctx.ui.callout({ x: CH.x, y: CH.y + CH.h + 18, w: CO_W, tone: 'good',
           text: 'EOQ = √(2DS/H) ≈ 1,095 — the table brackets it (TC ≈ 32,863).' +
             '<span class="t17-math">√(2 × 12,000 × 1,500 ÷ 30) = √1,200,000</span>' });
         if (animate) co.style.animationDelay = '1.8s';
