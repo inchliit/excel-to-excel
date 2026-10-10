@@ -19,6 +19,7 @@ extendTrick('ifs', (function () {
       S + '.xg-cell.abc span{display:inline-block;min-width:28px;padding:0 8px;border-radius:999px;font-weight:800;text-align:center;line-height:1.4}',
       // ghost nested IF
       S + '.ab-ghost{border-left-color:#c62828;transition:opacity .8s,filter .8s}',
+      S + '.ab-ghost .ab-code{line-height:1.95}',
       S + '.ab-ghost.faded{opacity:.38;filter:grayscale(1)}',
       S + '.ab-ghost .br{position:relative;display:inline-block;font-weight:800;border-radius:4px}',
       S + '.ab-ghost .br.d1{color:#2f6fd6}',
@@ -43,7 +44,9 @@ extendTrick('ifs', (function () {
       S + '.ab-ifs .pr.skip{opacity:.45}',
       S + '.ab-ifs.anim .ln{animation:popIn .25s ease-out both;animation-delay:var(--t)}',
       S + '.ab-sum{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 12px;font:600 16px var(--font);color:#e8eef3;display:flex;gap:14px;align-items:center}',
-      S + '.ab-sum .abc-chip{margin-right:4px}'
+      S + '.ab-sum .abc-chip{margin-right:6px}',
+      S + '.ab-sum span{white-space:nowrap}',
+      S + '.ab-sum b{color:#ffd166}'
     ].join('\n') + '</style>');
   }
 
@@ -59,7 +62,7 @@ extendTrick('ifs', (function () {
   const pct = v => Math.round(v * 100) + '%';
   const typeMs = t => t.length * Math.max(18, Math.min(55, 1600 / Math.max(1, t.length)));
 
-  const X = 670, W = 238;            // right-hand column for the formula cards
+  const X = 670, W = 209;            // right-hand column for the formula cards (content width; +29px padding/border)
 
   function chip(g, ref) {
     const el = g.cell(ref), v = g.value(ref);
@@ -74,7 +77,7 @@ extendTrick('ifs', (function () {
     const code = '=IF' + br('(', 1, 1) + 'C2&lt;=0.8,"A",\n' +
                  '  IF' + br('(', 2, 2) + 'C2&lt;=0.95,"B",\n' +
                  '    "C"' + br(')', 2, 2) + br(')', 1, 1);
-    return ctx.box({ x: X, y: 98, w: W, cls: 'ab-card ab-ghost' + (animate ? ' anim' : ''),
+    return ctx.box({ x: X, y: 116, w: W, cls: 'ab-card ab-ghost' + (animate ? ' anim' : ''),
       html: '<div class="ab-lbl">Old way · nested IF</div><div class="ab-code">' + code + '</div>' +
             '<div class="ab-foot">2 IFs → 2 brackets to close: <b>))</b></div>' });
   }
@@ -102,7 +105,7 @@ extendTrick('ifs', (function () {
         (i < 2 ? ',' : ')') + mk + '</span>';
     });
     const title = trace ? 'Row ' + row + ': ' + c + ' = ' + pct(trace.c) + ' → ' + classOf(trace.c) : 'IFS · test, result pairs';
-    return ctx.box({ x: X, y: 262, w: W, cls: 'ab-card ab-ifs' + (animate ? ' anim' : ''),
+    return ctx.box({ x: X, y: 294, w: W, cls: 'ab-card ab-ifs' + (animate ? ' anim' : ''),
       html: '<div class="ab-lbl">' + title + '</div><div class="ab-code"><span class="ln" style="--t:0ms">=IFS(</span>' + lines.join('') + '</div>' +
             '<div class="ab-foot">' + (trace ? 'Stops at the first TRUE.' : 'Last pair TRUE,"C" = everything else.') + '</div>' });
   }
@@ -146,8 +149,8 @@ extendTrick('ifs', (function () {
         // share of total usage value per class, from the raw values (not the rounded C column)
         const total = SKUS.reduce((a, s) => a + s[1], 0);
         const share = k => Math.round(SKUS.reduce((a, s, i) => a + (CLASSES[i] === k ? s[1] : 0), 0) / total * 100) + '%';
-        const sum = ctx.box({ x: 12, y: 416, w: 642, cls: 'ab-sum',
-          html: ['A', 'B', 'C'].map(k => '<span><i class="abc-chip ' + k + '">' + k + '</i>' + n(k) + ' SKUs = ' + share(k) + ' of value</span>').join('') });
+        const sum = ctx.box({ x: 12, y: 416, w: 616, cls: 'ab-sum',
+          html: '<span>Share of value:</span>' + ['A', 'B', 'C'].map(k => '<span><i class="abc-chip ' + k + '">' + k + '</i>' + n(k) + ' SKUs = <b>' + share(k) + '</b></span>').join('') });
         if (animate) sum.style.animation = 'popIn .3s ease-out .9s both';
         ctx.caption('Fill down: every SKU gets its class. ' + n('A') + ' A, ' + n('B') + ' B, ' + n('C') + ' C.');
       },
@@ -158,7 +161,7 @@ extendTrick('ifs', (function () {
         g.select('D' + row);
         ifsCard(ctx, { row, trace: { c }, animate: false });
         ctx.ui.callout({ text: 'Checks in order, stops at the first TRUE. <b>TRUE</b> at the end = else; forget it → <b>#N/A</b>.',
-          x: 12, y: 466, w: 642, tone: 'info' });
+          x: 12, y: 462, w: 609, tone: 'info' });
         ctx.caption('IFS checks the tests in order and stops at the first TRUE.');
       }
     ],

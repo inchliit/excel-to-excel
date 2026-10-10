@@ -35,6 +35,7 @@ extendTrick('xlookup', (function () {
       S + '.xl-arrow.anim .hd{animation:fadeIn .3s ease-out .6s both}',
       '@keyframes xlDraw{to{stroke-dashoffset:0}}',
       S + '.xg-cell.xl-err{justify-content:center;color:#c62828;font-weight:700}',
+      S + '.xg-cell.xl-hdr{font-weight:700;background:#f7faf8}',
       S + '.ui-callout code{font:700 15px var(--mono);background:rgba(0,0,0,.06);padding:0 4px;border-radius:4px}'
     ].join('\n') + '</style>');
   }
@@ -104,12 +105,12 @@ extendTrick('xlookup', (function () {
       const lbl = p.lbl ? '<i' + (p.c != null ? ' style="color:' + RC[p.c] + '"' : '') + '>' + esc(p.lbl) + '</i>' : '';
       return '<span class="xl-a' + (p.cls ? ' ' + p.cls : '') + '"' + style + '>' + esc(p.t) + lbl + '</span>';
     }).join('') + '</div>';
-    const d = ctx.box({ x: 20, y: 362, w: 520, cls: 'xl-card xl-tmp' + (old ? ' old' : '') + (anat ? ' anat' : ''), html });
+    const d = ctx.box({ x: 20, y: 362, w: 500, cls: 'xl-card xl-tmp' + (old ? ' old' : '') + (anat ? ' anat' : ''), html });
     if (animate) d.style.animation = 'popIn .3s ease-out both';
     return d;
   }
   function note(ctx, text, tone, y = 362) {
-    const c = ctx.ui.callout({ text, x: 562, y, w: 338, tone });
+    const c = ctx.ui.callout({ text, x: 572, y, w: 300, tone });   // content-box: +33px padding/border
     c.classList.add('xl-tmp');
     return c;
   }
@@ -173,7 +174,7 @@ extendTrick('xlookup', (function () {
         bubbles(ctx, g, animate);
         card(ctx, { title: 'The old way: VLOOKUP', old: true, animate,
           parts: [{ t: '=VLOOKUP(F2,A2:D9,' }, { t: '3', bad: true }, { t: ',FALSE)' }] });
-        ctx.box({ x: 562, y: 362, w: 338, cls: 'xl-pains xl-tmp' + (animate ? ' anim' : ''),
+        ctx.box({ x: 572, y: 362, w: 328, cls: 'xl-pains xl-tmp' + (animate ? ' anim' : ''),
           html: '<div class="xl-pain">① Count the columns by hand: <b>3</b></div>' +
                 '<div class="xl-pain">② Can’t look <b>left</b> of column A</div>' +
                 '<div class="xl-pain">③ Missing part → <b>#N/A</b></div>' });
@@ -186,7 +187,7 @@ extendTrick('xlookup', (function () {
         g.refBox('F2', 0);
         g.refBox('A2:A9', 1);
         g.refBox('C2:C9', 2);
-        card(ctx, { title: 'XLOOKUP: no column number', parts: ANAT('find this').concat([{ t: ')' }]), animate });
+        card(ctx, { title: 'XLOOKUP: no column number', parts: ANAT('find').concat([{ t: ')' }]), animate });
         typeThen(ctx, g, 'G2', F1, animate, () => {
           const r = rowOf('P-1043', 0);
           g.mark('A' + r, 'hl-yellow');
@@ -206,13 +207,15 @@ extendTrick('xlookup', (function () {
         card(ctx, { title: 'Look left', animate, parts: [
           { t: '=XLOOKUP(' }, { t: '"Weld bracket"', cls: 'lit', lbl: 'find this' }, { t: ',' },
           { t: 'B2:B9', c: 0, lbl: 'look in' }, { t: ',' }, { t: 'A2:A9', c: 1, lbl: '← return' }, { t: ')' }] });
-        typeThen(ctx, g, 'G4', F_LEFT, animate, () => {
+        g.set('G4', 'Part No');
+        g.mark('G4', 'xl-hdr');
+        typeThen(ctx, g, 'G5', F_LEFT, animate, () => {
           const r = rowOf('Weld bracket', 1);
           g.mark('B' + r, 'hl-yellow');
           g.mark('A' + r, 'hl-green');
           leftArrow(ctx, g, r, animate);
-          g.enter('G4', xlookup('Weld bracket', 1, 0), F_LEFT);
-          g.select('G4');
+          g.enter('G5', xlookup('Weld bracket', 1, 0), F_LEFT);
+          g.select('G5');
           note(ctx, 'The return column sits to the <b>left</b> of the lookup column. VLOOKUP can’t do that.', 'good');
         });
         ctx.caption('Look left: find the description, return its Part No.');
@@ -221,7 +224,7 @@ extendTrick('xlookup', (function () {
       (ctx, animate) => {
         const g = ctx.g;
         clear(ctx);
-        card(ctx, { title: 'Part not in the list', animate, parts: ANAT('find P-999').concat([{ t: ')' }]) });
+        card(ctx, { title: 'Part not in the list', animate, parts: ANAT('P-999').concat([{ t: ')' }]) });
         typeThen(ctx, g, 'F2', 'P-999', animate, () => {
           g.enter('F2', 'P-999');
           g.enter('G2', xlookup('P-999', 0, 2), F1);
@@ -236,7 +239,7 @@ extendTrick('xlookup', (function () {
         const g = ctx.g;
         clear(ctx);
         card(ctx, { title: '4th argument: if not found', animate,
-          parts: ANAT('find P-999').concat([{ t: ',' }, { t: '"Not found"', cls: 'nf', lbl: 'if missing' }, { t: ')' }]) });
+          parts: ANAT('P-999').concat([{ t: ',' }, { t: '"Not found"', cls: 'nf', lbl: 'if missing' }, { t: ')' }]) });
         editThen(ctx, g, 'G2', '=XLOOKUP(F2,A2:A9,C2:C9', ',"Not found"', ')', animate, () => {
           g.unmark('xl-err');
           g.enter('G2', xlookup('P-999', 0, 2, 'Not found'), F_NF);
