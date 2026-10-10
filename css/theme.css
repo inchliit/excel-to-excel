@@ -149,5 +149,12 @@ html, body, .reveal-viewport { background: radial-gradient(1200px 700px at 70% -
 .act3 .ag-act, .act-slide.act3 .act-num { color: #ffd166; }
 .act4 .ag-act, .act-slide.act4 .act-num { color: #ff9f9f; }
 
-/* print / pdf: show final states without chrome */
+/* print / pdf: final states, no shadows (Chrome prints blurred shadows as solid blocks), try-it task + answer */
 @media print { .try-badge { display: none !important; } }
+html.print-pdf .stage *, html.print-pdf .qr-card { box-shadow: none !important; filter: none !important; text-shadow: none !important; }
+.ti-print { display: none; }
+html.print-pdf .ti-print { display: flex; flex-direction: column; gap: 22px; position: absolute; left: 72px; right: 72px; top: 140px; font-size: 26px; line-height: 1.4; }
+.ti-print p { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 22px; }
+.ti-print b { display: block; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.ti-print code { font: 600 26px var(--mono); color: #b9f6d3; }
+html.print-pdf .tryit-root { display: none; }

@@ -40,6 +40,8 @@
     return '<section class="tryit-slide act' + t.act + '" id="try-' + slideId(t) + '" data-tryit="' + esc(t.id) + '">' +
       '<header class="t-head"><span class="t-num">' + pad(t.n) + '</span><h2>Try it · ' + esc(t.title) + '</h2>' + pill(t.version) + '</header>' +
       '<div class="tryit-root"></div>' +
+      '<div class="ti-print"><p><b>Your task</b>' + esc(t.tryit.task) + '</p><p><b>Answer</b><code>' + esc(t.tryit.answer) + '</code></p>' +
+      '<p><b>Hint</b>' + esc(t.tryit.hint) + '</p></div>' +
       notesHTML('- Give students 60–90 seconds here.\n- Type the formula in the box and press Enter. Hint and Show answer are there if stuck.\n- Press ↑ to go back to the demo.') +
       '</section>';
   }
