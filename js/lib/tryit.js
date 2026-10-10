@@ -99,8 +99,9 @@
     if (typeof b === 'string') return typeof a === 'string' && a.trim().toUpperCase() === b.trim().toUpperCase();
     return empty(a) && empty(b);
   }
-  function errorResult(v) {
-    return { status: 'error', title: v.value, message: ERRORS[v.value] || 'Excel would show ' + v.value + '.' };
+  function errorResult(v, ti) {
+    const base = ERRORS[v.value] || 'Excel would show ' + v.value + '.';
+    return { status: 'error', title: v.value, message: base + (ti && ti.hint ? ' Hint: ' + ti.hint : '') };
   }
 
   function evaluate(NS, ti, raw) {
@@ -126,15 +127,19 @@
     if (ti.mode === 'value' || ti.mode === 'random') {
       const v = get(t.row, t.col);
       cells[ti.target] = display(v);
-      if (isErr(v)) return Object.assign(errorResult(v), { cells });
+      if (isErr(v)) return Object.assign(errorResult(v, ti), { cells });
       if (ti.mode === 'value') ok = same(v, ti.expected);
       else {
         if (typeof v !== 'number') return { status: 'wrong', title: 'Not a number', message: 'The formula should return a time in minutes.', cells };
+        const used = functionsIn(f);
+        const missing = (ti.mustUse || []).filter(fn => !used.has(fn.toUpperCase()));
+        if (missing.length) return { status: 'wrong', title: 'Not quite', message: 'Use ' + missing.join(' + ') + ' so every recalculation draws a new realistic time. Hint: ' + ti.hint, cells };
         const n = (ti.random && ti.random.trials) || 500, samples = [];
         for (let i = 0; i < n; i++) { hf.setCellContents(A(t.row, t.col), [[f]]); const x = get(t.row, t.col); if (typeof x === 'number') samples.push(x); }
         const mean = samples.reduce((s, x) => s + x, 0) / Math.max(1, samples.length);
         const sd = Math.sqrt(samples.reduce((s, x) => s + (x - mean) * (x - mean), 0) / Math.max(1, samples.length - 1));
-        ok = samples.length === n && Math.abs(mean - ti.random.mean) <= 0.1 * Math.abs(ti.random.mean);
+        ok = samples.length === n && Math.abs(mean - ti.random.mean) <= 0.1 * Math.abs(ti.random.mean) &&
+          (!ti.random.sd || Math.abs(sd - ti.random.sd) <= 0.25 * ti.random.sd);
         result = { samples, mean, sd };
       }
     } else if (ti.mode === 'spill') {
@@ -147,7 +152,7 @@
       }
       const below = get(t.row + exp.length, t.col);
       if (!empty(below) && !isErr(below)) { ok = false; cells[a1(t.row + exp.length, t.col)] = display(below); }
-      if (firstErr && !ok) return Object.assign(errorResult(firstErr), { cells });
+      if (firstErr && !ok) return Object.assign(errorResult(firstErr, ti), { cells });
     } else {
       const g = range(ti.fill);
       for (let r = g.r0; r <= g.r1; r++) for (let c = g.c0; c <= g.c1; c++) {
@@ -156,7 +161,7 @@
         if (isErr(v) && !firstErr) firstErr = v;
         if (!same(v, ti.expected[r - g.r0][c - g.c0])) ok = false;
       }
-      if (firstErr && !ok) return Object.assign(errorResult(firstErr), { cells });
+      if (firstErr && !ok) return Object.assign(errorResult(firstErr, ti), { cells });
     }
 
     const out = { status: ok ? 'ok' : 'wrong', cells, formula: f };

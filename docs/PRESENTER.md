@@ -1,6 +1,8 @@
 # Presenter cheat sheet: Excel to Excel
 
 **Deck link (share in the webinar chat):** https://inchliit.github.io/excel-to-excel/
+**Practice workbook:** https://inchliit.github.io/excel-to-excel/downloads/Excel-to-Excel-practice.xlsx
+(also a green button on the "How to follow along" and Q&A slides)
 
 ## Before you go live (5 min)
 1. Open the link in Chrome on the laptop you present from. Click once inside the slide so it has focus.
@@ -11,7 +13,8 @@
 ## Keys while presenting
 | Key | Does |
 |---|---|
-| → or Space | next animation step (one click = one step), then next slide |
+| → | next animation step (one click = one step), then the next trick. **Use → to stay on the main path.** |
+| Space, PageDown or a clicker | also next step, but at the end of a trick with a Try-it it goes **down into the Try-it** first |
 | ← | back one step (the slide rebuilds exactly) |
 | ↓ / ↑ | into / out of a trick's **Try it** sub-slide (only tricks with the yellow "↓ Try it yourself" badge) |
 | Esc or O | overview of all slides; click one to jump |
@@ -23,7 +26,7 @@ The agenda slide and the recap slide are clickable: click any trick to jump to i
 
 ## Timing (90 min)
 Intro 5 · Act 1 ~17 · Act 2 ~21 · Act 3 ~14 · Act 4 ~18 · Power Query teaser 2 · Q&A 13.
-If you run late, skip the Try-it sub-slides (students can do them after; the link stays up).
+If you run late, skip the Try-it sub-slides: press → (not Space or a clicker) at the end of a trick. Students can do them after; the link stays up.
 
 ## Try-it moments
 On a trick with the badge, press ↓, tell students to open the same trick on their device, and give them 60–90 s.

@@ -80,6 +80,21 @@ if (!fo || fo.status !== 'ok') fail.push('top-level FILTER-only task should be "
 const rnd = Core.evaluate(NS, fixtures[5].tryit, fixtures[5].tryit.answer);
 if (!rnd || /exactly what Excel returns/.test(rnd.message || '')) fail.push('random-mode success message should talk about randomness, got: ' + (rnd && rnd.message));
 
+// final review: an Excel error must still show the trick's hint (Review Focus 3)
+const byId = Object.fromEntries(tricks.filter(t => t.tryit).map(t => [t.id, t.tryit]));
+for (const [id, f] of [['mixed-refs', '=B2*C1'], ['sumifs', '=SUMIFS(D2:D13,B2:B12,"L2",C2:C13,"Night")']]) {
+  if (!byId[id]) continue;
+  const r = Core.evaluate(NS, byId[id], f);
+  if (!r || r.status !== 'error' || !(r.message || '').includes(byId[id].hint)) fail.push(`${id} error for ${f} should include the hint, got ${r && r.status}: ${r && r.message}`);
+}
+// final review: random mode needs NORM.INV + RAND and the right spread, not just the right mean
+if (byId['monte-carlo']) {
+  for (const f of ['=18', '=RAND()*36', '=NORM.INV(RAND(),18,25)']) {
+    const r = Core.evaluate(NS, byId['monte-carlo'], f);
+    if (!r || r.status === 'ok') fail.push(`monte-carlo should reject ${f}, got ${r && r.status}`);
+  }
+}
+
 // wrong answers must be marked wrong (not ok)
 const wrong = Core.evaluate(NS, fixtures[0].tryit, '=SUMIFS(D2:D6,B2:B6,"L1")');
 if (!wrong || wrong.status !== 'wrong') fail.push('fx-value wrong answer should be "wrong", got ' + (wrong && wrong.status));

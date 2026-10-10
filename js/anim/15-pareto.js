@@ -68,6 +68,9 @@
       (ctx, animate) => {
         if (ctx.rb) { ctx.rb.remove(); ctx.rb = null; }
         const c = drawPareto(ctx, true, false);
+        // Excel's Pareto chart has no 80% line: label ours so nobody hunts for it in Excel
+        const g80 = Array.from(c.querySelectorAll('text.lbl')).find(t => t.textContent === '80%');
+        if (g80) g80.textContent = '80% guide (we added it)';
         const bars = c.querySelectorAll('rect.bar');
         bars.forEach((b, i) => { b.classList.toggle('alt', i >= TOP); if (animate && i >= TOP) b.classList.add('t15-grey'); });
         cumLabels(c).forEach((t, i) => {
@@ -76,14 +79,14 @@
           if (animate) { t.classList.add('t15-in'); t.style.animationDelay = (0.5 + 0.35 * i) + 's'; }
         });
         if (animate) {
-          const hl = c.querySelector('line.hline'), lab = Array.from(c.querySelectorAll('text.lbl')).find(t => t.textContent === '80%');
+          const hl = c.querySelector('line.hline'), lab = g80;
           [hl, lab].forEach(e => { if (e) e.classList.add('t15-in'); });
         }
         SORTED.slice(0, TOP).forEach(([cause]) => {
           const r = DATA.findIndex(d => d[0] === cause) + 2;
           ctx.g.mark('A' + r + ':B' + r, 'hl-green');
         });
-        ctx.caption('Cumulative: ' + CUM.slice(0, TOP).map(pct).join(' → ') + '. The top ' + TOP + ' pass the 80% line.');
+        ctx.caption('Cumulative: ' + CUM.slice(0, TOP).map(pct).join(' → ') + '. Top ' + TOP + ' pass our 80% guide.');
       },
       // 4 · the decision
       (ctx) => {
