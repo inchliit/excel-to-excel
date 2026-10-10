@@ -1,0 +1,11 @@
+{
+  "name": "excel-to-excel",
+  "private": true,
+  "description": "Excel to Excel webinar deck: dev checks only (the deck itself has no build step)",
+  "scripts": {
+    "test": "node tests/check-tricks.mjs && node tests/check-tryits.mjs"
+  },
+  "devDependencies": {
+    "hyperformula": "3.4.0"
+  }
+}

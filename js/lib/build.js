@@ -52,8 +52,9 @@
     tricks.forEach(t => { byId[t.id] = t; });
     let html = '';
     if (params.has('dev') && window.DEV_TRICK) {
-      byId[window.DEV_TRICK.id] = window.DEV_TRICK;
-      html += trickSection(window.DEV_TRICK);
+      const d = window.DEV_TRICK;
+      byId[d.id] = d;
+      html += d.tryit ? '<section>' + trickSection(d) + tryitSection(d) + '</section>' : trickSection(d);
     }
     S.intro(tricks).forEach(s => { html += staticSection(s); });
     [1, 2, 3, 4].forEach(act => {

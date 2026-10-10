@@ -3,6 +3,10 @@ window.DEV_TRICK = {
   n: 0, id: 'dev', act: 0, title: 'DEV: component check', tagline: 'Every shared helper, one step each.',
   version: 'All', keys: ['Ctrl', 'Alt', 'V'], formula: '=SUMIFS(D2:D7,B2:B7,"L2")', ribbon: 'Data › What-If Analysis › Goal Seek',
   why: 'If this slide looks right forward and backward, the libs are fine.', alt: null, notes: '- dev only',
+  tryit: { sheet: [['Date', 'Line', 'Shift', 'Defects'], ['Mon', 'L1', 'Day', 6], ['Mon', 'L2', 'Night', 9], ['Tue', 'L2', 'Day', 4],
+    ['Tue', 'L1', 'Night', 8], ['Wed', 'L2', 'Night', 7], ['Wed', 'L3', 'Day', 5]],
+    task: 'Total defects for Line L2 → put it in G2', target: 'G2', mode: 'value', expected: 20, mustUse: ['SUMIFS'],
+    hint: 'Sum range first, then (criteria range, criteria).', answer: '=SUMIFS(D2:D7,B2:B7,"L2")' },
   stage(ctx) {
     ctx.g = ctx.grid({ x: 20, y: 20, cols: 5, rows: 8, colWidths: [70, 60, 70, 80, 90], title: 'Production',
       data: [['Date', 'Line', 'Shift', 'Defects', 'Yield'], ['Mon', 'L1', 'Day', 6, 0.985], ['Mon', 'L2', 'Night', 9, 0.98],
